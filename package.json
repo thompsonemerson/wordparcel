@@ -1,0 +1,52 @@
+{
+  "name": "wordparcel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "content": "wordpress/wp-content",
+    "theme": "wordpress/wp-content/themes/wordparcel"
+  },
+  "scripts": {
+    "start": "php -S localhost:1234 -t wordpress",
+    "dev": "run-p build start watch",
+
+    "build:scss": "parcel build src/scss/styles.scss -d $npm_package_config_theme/css",
+    "build:js": "parcel build src/js/scripts.js -d $npm_package_config_theme/js",
+    "build:copy": "npm run copy",
+    "build": "run-p wp:plugins build:*",
+
+    "copy:php": "cpy '**/*.php' ../$npm_package_config_theme --cwd=src --parents",
+    "copy:css": "cpy '**/*.css' ../$npm_package_config_theme --cwd=src --parents",
+    "copy:img": "cpy '**/*.png' '**/*.gif' '**/*.jpg' '**/*.svg' '**/*.ico' ../$npm_package_config_theme --cwd=src --parents",
+    "copy": "run-p copy:*",
+
+    "watch:scss": "parcel watch src/scss/styles.scss -d $npm_package_config_theme/css",
+    "watch:js": "parcel watch src/js/scripts.js -d $npm_package_config_theme/js",
+    "watch:php": "onchange 'src/**/*.php' -- npm run copy:php",
+    "watch:css": "onchange 'src/*.css' -- npm run copy:css",
+    "watch:img": "onchange 'src/img/**/*' -- npm run copy:img",
+    "watch": "run-p watch:*",
+
+    "wp:plugins": "cpy 'plugins/**/*' $npm_package_config_content --cwd=. --parents",
+    "wp:install": "bash ./scripts.sh"
+  },
+  "keywords": [
+    "boilerplate", "parcel", "parceljs", 
+    "wp", "wordpress", "development", "simple",
+    "fast", "sass", "scss"
+  ],
+  "author": {
+    "name": "Emerson Thompson",
+    "email": "thompson.emerson@gmail.com",
+    "url": "https://emersonthompson.com.br"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "cpy-cli": "^3.1.1",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.0.2",
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.26.8"
+  }
+}
